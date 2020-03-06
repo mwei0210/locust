@@ -6,7 +6,16 @@
 #fi
 
 LOCUST_MODE="${LOCUST_MODE:=standalone}"
-_LOCUST_OPTS="-f ${LOCUSTFILE_PATH:-/locust/locustfile.py}"
+LOCUST_SCRIPT_DIR_PATH="${LOCUST_SCRIPT_DIR_PATH:-/locust}"
+_LOCUST_OPTS="-f ${LOCUSTFILE_PATH:-$LOCUST_SCRIPT_DIR_PATH/locustfile.py}"
+REQUIREMENT_FILE_NAME="${REQUIREMENT_FILE_NAME:-requirements.txt}"
+
+if [ -f "$file" ]; then
+    echo "$file found. Installing dependencies..."
+    pip install --user locust -r $LOCUST_SCRIPT_DIR_PATH/$REQUIREMENT_FILE_NAME
+else
+    echo "$file not found."
+fi
 
 if [ "${LOCUST_MODE}" = "MASTER" ]; then
     _LOCUST_OPTS="${_LOCUST_OPTS} --master"
